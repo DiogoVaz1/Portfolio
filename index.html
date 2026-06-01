@@ -51,7 +51,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;mix-blend-mode:difference}
 .lang-switch .lg{opacity:.4;transition:opacity .25s}
 .lang-switch .lg.active{opacity:1;text-decoration:underline;text-underline-offset:4px}
 .lang-switch .sep{opacity:.4}
-@media(max-width:820px){.nav-links{display:none}.lang-switch{cursor:pointer}}
+.nav-cv{display:inline-flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.04em;color:var(--ink);background:#fff;padding:9px 16px;border-radius:999px;transition:transform .25s,background .25s}
+.nav-cv:hover{transform:translateY(-2px)}
+.nav-cv svg{width:14px;height:14px;stroke:var(--accent);fill:none;stroke-width:2}
+.foot-cv{display:inline-flex;align-items:center;gap:12px;margin-top:46px;background:var(--ink);color:var(--paper);padding:18px 32px;border-radius:999px;font-family:'Space Mono',monospace;font-size:14px;letter-spacing:.03em;transition:transform .25s,background .25s,color .25s}
+.foot-cv:hover{transform:translateY(-3px);background:var(--paper);color:var(--ink)}
+.foot-cv svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2}
+.foot-cv .eu{font-weight:700;color:var(--accent)}
+@media(max-width:820px){.nav-links{display:none}.lang-switch{cursor:pointer}.nav-cv span{display:none}.nav-cv{padding:9px 11px}}
 
 header{min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;padding:120px 0 60px}
 .hero-kicker{font-family:'Space Mono',monospace;font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:30px;display:flex;align-items:center;gap:16px;opacity:0;animation:fadeIn .8s .9s forwards}
@@ -172,6 +179,10 @@ footer{background:var(--accent);color:var(--paper);padding:130px 0 60px}
         <a href="#projetos" data-pt="Projetos" data-en="Projects">Projetos</a>
         <a href="#contacto" data-pt="Contacto" data-en="Contact">Contacto</a>
       </div>
+      <a class="nav-cv" id="navCv" href="#" target="_blank" rel="noopener" style="display:none">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+        <span data-pt="Ver Europass" data-en="View Europass">Ver Europass</span>
+      </a>
       <button class="lang-switch" id="langSwitch" aria-label="Idioma / Language">
         <span class="lg" data-set-lang="pt">PT</span><span class="sep">/</span><span class="lg" data-set-lang="en">EN</span>
       </button>
@@ -305,6 +316,13 @@ footer{background:var(--accent);color:var(--paper);padding:130px 0 60px}
   <div class="wrap">
     <p class="foot-big reveal" data-pt="Vamos&lt;br&gt;trabalhar." data-en="Let's&lt;br&gt;work.">Vamos<br>trabalhar.</p>
     <a class="foot-mail reveal" href="mailto:diogovazz@protonmail.com">diogovazz@protonmail.com</a>
+    <div class="reveal">
+      <a class="foot-cv" id="footCv" href="#" target="_blank" rel="noopener" style="display:none">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>
+        <span data-pt="Ver o meu currículo" data-en="View my CV">Ver o meu currículo</span>
+        <span class="eu">Europass</span>
+      </a>
+    </div>
     <div class="foot-grid reveal">
       <div class="col"><h5 data-pt="Telefone" data-en="Phone">Telefone</h5><a href="tel:+351960497033">+351 960 497 033</a></div>
       <div class="col"><h5 data-pt="Localização" data-en="Location">Localização</h5><p>Alvito, Portugal</p></div>
@@ -319,7 +337,13 @@ footer{background:var(--accent);color:var(--paper);padding:130px 0 60px}
    ZONA EDITAVEL - OS TEUS PROJETOS
    ------------------------------------------------------------
    1) GitHub: o teu utilizador (sem @). Vazio "" esconde o botao. */
-const PERFIL_GITHUB = "DiogoVaz1"; // ex.: "diogovaz"
+const PERFIL_GITHUB = "DiogoVaz1";
+
+/* 1b) Link do teu curriculo (Europass) na cloud.
+   Cola aqui o link de partilha (Google Drive, OneDrive, Dropbox, etc.).
+   Dica: garante que a partilha esta como "qualquer pessoa com o link pode ver".
+   Vazio "" esconde os botoes de CV. */
+const LINK_CV = "https://files.catbox.moe/imqlay.pdf";
 
 /* 2) Projetos: copia um bloco { ... } por cada projeto.
    Campos: titulo, descricao, meta, link, stack.
@@ -418,6 +442,16 @@ function applyLang(lang){
   }
 })();
 
+/* botoes do curriculo (Europass) */
+(function(){
+  if(LINK_CV.trim()){
+    ['navCv','footCv'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(el){ el.href=LINK_CV.trim(); el.style.display='inline-flex'; }
+    });
+  }
+})();
+
 /* switch de idioma */
 document.querySelectorAll('#langSwitch .lg').forEach(function(s){
   s.addEventListener('click', function(){ applyLang(s.getAttribute('data-set-lang')); });
@@ -448,7 +482,7 @@ document.querySelectorAll('#langSwitch .lg').forEach(function(s){
   (function loop(){rx+=(mx-rx)*0.18;ry+=(my-ry)*0.18;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
   function grow(){ring.classList.add('grow');}
   function shrink(){ring.classList.remove('grow');}
-  function bind(){document.querySelectorAll('a,.pick,.magnetic,.proj-card,.skill-cell,.lang-switch,[data-cursor]').forEach(function(el){
+  function bind(){document.querySelectorAll('a,.pick,.magnetic,.proj-card,.skill-cell,.lang-switch,.nav-cv,.foot-cv,[data-cursor]').forEach(function(el){
     el.addEventListener('mouseenter',grow);el.addEventListener('mouseleave',shrink);});}
   bind();setTimeout(bind,300);
 })();
