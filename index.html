@@ -339,11 +339,10 @@ footer{background:var(--accent);color:var(--paper);padding:130px 0 60px}
    1) GitHub: o teu utilizador (sem @). Vazio "" esconde o botao. */
 const PERFIL_GITHUB = "DiogoVaz1"; // ex.: "diogovaz"
 
-/* 1b) Link do teu curriculo (Europass) na cloud.
-   Cola aqui o link de partilha (Google Drive, OneDrive, Dropbox, etc.).
-   Dica: garante que a partilha esta como "qualquer pessoa com o link pode ver".
+/* 1b) Links do teu curriculo, um por idioma.
+   Os ficheiros sao enviados pelo botao "Upload para o portfolio" do CV Builder.
    Vazio "" esconde os botoes de CV. */
-const LINK_CV = "https://files.catbox.moe/ahow17.pdf"; // ex.: "https://drive.google.com/file/d/XXXX/view"
+const LINK_CV = { pt: "cv-pt.pdf", en: "cv-en.pdf" };
 
 /* 2) Projetos: copia um bloco { ... } por cada projeto.
    Campos: titulo, descricao, meta, link, stack.
@@ -441,6 +440,7 @@ function applyLang(lang){
   });
   renderPicks();
   renderProjetos();
+  renderCvLinks();
   document.querySelectorAll('#langSwitch .lg').forEach(function(s){
     s.classList.toggle('active', s.getAttribute('data-set-lang')===lang);
   });
@@ -456,15 +456,16 @@ function applyLang(lang){
   }
 })();
 
-/* botoes do curriculo (Europass) */
-(function(){
-  if(LINK_CV.trim()){
-    ['navCv','footCv'].forEach(function(id){
-      var el=document.getElementById(id);
-      if(el){ el.href=LINK_CV.trim(); el.style.display='inline-flex'; }
-    });
-  }
-})();
+/* botoes do curriculo: abrem o CV no idioma do site */
+function renderCvLinks(){
+  var link=(LINK_CV[LANG]||'').trim();
+  ['navCv','footCv'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(!el) return;
+    if(link){ el.href=link; el.style.display='inline-flex'; }
+    else el.style.display='none';
+  });
+}
 
 /* switch de idioma */
 document.querySelectorAll('#langSwitch .lg').forEach(function(s){
